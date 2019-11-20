@@ -52,6 +52,7 @@ const init = async () => {
 
   console.log("SSM params loaded");
 
+  process.env.failure_rate = 0;
   process.env.TEST_ROOT = params.url;
   process.env.restaurants_api = `${params.url}/restaurants`;
   process.env.restaurants_table = params.table_name;

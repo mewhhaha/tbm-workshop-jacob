@@ -13,6 +13,12 @@ provider:
     - Effect: Allow
       Action: sns:Publish
       Resource:
+        - Ref: restaurantNotificationTopic
+        - Ref: restaurantNotificationRetryTopic
+        - Ref: restaurantNotificationDLQTopic
+    - Effect: Allow
+      Action: sns:Publish
+      Resource:
         Ref: restaurantNotificationTopic
     - Effect: Allow
       Action: kinesis:PutRecord
@@ -31,6 +37,19 @@ provider:
       Resource: arn:aws:execute-api:#{AWS::Region}:#{AWS::AccountId}:*/*/GET/restaurants
 
 functions:
+  retry-notify-restaurant:
+    handler: functions/retry-notify-restaurant.handler
+    events:
+      - sns:
+          arn:
+            Ref: restaurantNotificationRetryTopic
+          topicName: ${ssm:/${self:service}/${opt:stage}/restaurant_retry_topic_name}
+    environment:
+      order_events_stream: ${ssm:/${self:service}/${opt:stage}/stream_name}
+      restaurant_notification_topic:
+        Ref: restaurantNotificationTopic
+    onError:
+      Ref: restaurantNotificationDLQTopic
   get-index:
     handler: functions/get-index.handler
     events:
@@ -98,6 +117,8 @@ functions:
       order_events_stream: ${ssm:/${self:service}/${opt:stage}/stream_name}
       restaurant_notification_topic:
         Ref: restaurantNotificationTopic
+      restaurant_notification_retry_topic:
+        Ref: restaurantNotificationRetryTopic
 
 resources:
   Resources:
@@ -106,6 +127,16 @@ resources:
       Properties:
         DisplayName: ${ssm:/${self:service}/${opt:stage}/restaurant_topic_name}
         TopicName: ${ssm:/${self:service}/${opt:stage}/restaurant_topic_name}
+    restaurantNotificationRetryTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: ${ssm:/${self:service}/${opt:stage}/restaurant_retry_topic_name}
+        TopicName: ${ssm:/${self:service}/${opt:stage}/restaurant_retry_topic_name}
+    restaurantNotificationDLQTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: ${ssm:/${self:service}/${opt:stage}/restaurant_dlq_topic_name}
+        TopicName: ${ssm:/${self:service}/${opt:stage}/restaurant_dlq_topic_name}
     orderEventsStream:
       Type: AWS::Kinesis::Stream
       Properties:
