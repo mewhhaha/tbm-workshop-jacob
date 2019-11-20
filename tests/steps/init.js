@@ -9,7 +9,7 @@ const SSM = new AWS.SSM();
 let initialized = false;
 
 const getParameters = async keys => {
-  const prefix = `/workshop-yancui/${STAGE}/`;
+  const prefix = `/workshop-jacob/${STAGE}/`;
   const req = {
     Names: keys.map(key => `${prefix}${key}`)
   };
