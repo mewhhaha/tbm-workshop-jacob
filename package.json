@@ -16,6 +16,7 @@
     "mocha": "^6.2.2",
     "mock-aws": "^1.2.3",
     "serverless": "^1.57.0",
+    "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-offline": "^5.12.0",
     "serverless-pseudo-parameters": "^2.5.0"
   },

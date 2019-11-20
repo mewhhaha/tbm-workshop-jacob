@@ -3,41 +3,28 @@ service: workshop-jacob
 plugins:
   - serverless-offline
   - serverless-pseudo-parameters
+  - serverless-iam-roles-per-function
 
 provider:
   name: aws
   runtime: nodejs10.x
   region: us-east-1
   stage: dev
-  iamRoleStatements:
-    - Effect: Allow
-      Action: sns:Publish
-      Resource:
-        - Ref: restaurantNotificationTopic
-        - Ref: restaurantNotificationRetryTopic
-        - Ref: restaurantNotificationDLQTopic
-    - Effect: Allow
-      Action: sns:Publish
-      Resource:
-        Ref: restaurantNotificationTopic
-    - Effect: Allow
-      Action: kinesis:PutRecord
-      Resource:
-        Fn::GetAtt:
-          - orderEventsStream
-          - Arn
-    - Effect: Allow
-      Action: dynamodb:scan
-      Resource:
-        Fn::GetAtt:
-          - restaurantsTable
-          - Arn
-    - Effect: Allow
-      Action: execute-api:Invoke
-      Resource: arn:aws:execute-api:#{AWS::Region}:#{AWS::AccountId}:*/*/GET/restaurants
 
 functions:
   retry-notify-restaurant:
+    iamRoleStatements:
+      - Effect: Allow
+        Action: kinesis:PutRecord
+        Resource:
+          Fn::GetAtt:
+            - orderEventsStream
+            - Arn
+      - Effect: Allow
+        Action: sns:Publish
+        Resource:
+          - Ref: restaurantNotificationTopic
+          - Ref: restaurantNotificationDLQTopic
     handler: functions/retry-notify-restaurant.handler
     events:
       - sns:
@@ -51,6 +38,10 @@ functions:
     onError:
       Ref: restaurantNotificationDLQTopic
   get-index:
+    iamRoleStatements:
+      - Effect: Allow
+        Action: execute-api:Invoke
+        Resource: arn:aws:execute-api:#{AWS::Region}:#{AWS::AccountId}:*/*/GET/restaurants
     handler: functions/get-index.handler
     events:
       - http:
@@ -73,6 +64,13 @@ functions:
       cognito_client_id: ${ssm:/${self:service}/${opt:stage}/cognito_web_client_id}
 
   get-restaurants:
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:scan
+        Resource:
+          Fn::GetAtt:
+            - restaurantsTable
+            - Arn
     handler: functions/get-restaurants.handler
     events:
       - http:
@@ -83,6 +81,13 @@ functions:
       restaurants_table: ${ssm:/${self:service}/${opt:stage}/table_name}
 
   search-restaurants:
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:scan
+        Resource:
+          Fn::GetAtt:
+            - restaurantsTable
+            - Arn
     handler: functions/search-restaurants.handler
     events:
       - http:
@@ -94,6 +99,13 @@ functions:
       restaurants_table: ${ssm:/${self:service}/${opt:stage}/table_name}
 
   place-order:
+    iamRoleStatements:
+      - Effect: Allow
+        Action: kinesis:PutRecord
+        Resource:
+          Fn::GetAtt:
+            - orderEventsStream
+            - Arn
     handler: functions/place-order.handler
     events:
       - http:
@@ -105,6 +117,18 @@ functions:
       order_events_stream: ${ssm:/${self:service}/${opt:stage}/stream_name}
 
   notify-restaurant:
+    iamRoleStatements:
+      - Effect: Allow
+        Action: kinesis:PutRecord
+        Resource:
+          Fn::GetAtt:
+            - orderEventsStream
+            - Arn
+      - Effect: Allow
+        Action: sns:Publish
+        Resource:
+          - Ref: restaurantNotificationTopic
+          - Ref: restaurantNotificationRetryTopic
     handler: functions/notify-restaurant.handler
     events:
       - stream:
