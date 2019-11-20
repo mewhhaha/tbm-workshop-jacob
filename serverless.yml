@@ -71,16 +71,16 @@ functions:
           path: /orders
           method: post
           authorizer:
-            arn: arn:aws:cognito-idp:#{AWS::Region}:#{AWS::AccountId}:userpool/${ssm:/workshop-yancui/dev/cognito_user_pool_id}
+            arn: arn:aws:cognito-idp:#{AWS::Region}:#{AWS::AccountId}:userpool/${ssm:/workshop-jacob/dev/cognito_user_pool_id}
     environment:
-      order_events_stream: ${ssm:/workshop-yancui/dev/stream_name}
+      order_events_stream: ${ssm:/workshop-jacob/dev/stream_name}
 
 resources:
   Resources:
     orderEventsStream:
       Type: AWS::Kinesis::Stream
       Properties:
-        Name: ${ssm:/workshop-yancui/dev/stream_name}
+        Name: ${ssm:/workshop-jacob/dev/stream_name}
         ShardCount: 1
     restaurantsTable:
       Type: AWS::DynamoDB::Table
