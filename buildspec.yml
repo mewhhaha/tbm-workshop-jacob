@@ -1,9 +1,10 @@
 version: 0.2
 
 phases:
-  build:
+  install:
     runtime-versions:
       runtime: nodejs10.x
+  build:
     commands:
       - npm install
       - npm run test
