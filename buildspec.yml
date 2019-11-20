@@ -4,9 +4,10 @@ phases:
   install:
     runtime-versions:
       nodejs: 10
-  build:
     commands:
       - npm install
-      - npm run test
-      - npm run sls -- deploy -s $STAGE -r $REGION
-      - npm run acceptance
+  build:
+    commands:
+      - npm run $COMMAND
+      # - npm run sls -- deploy -s $STAGE -r $REGION
+      # - npm run acceptance
