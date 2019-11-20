@@ -11,6 +11,10 @@ provider:
   stage: dev
   iamRoleStatements:
     - Effect: Allow
+      Action: sns:Publish
+      Resource:
+        Ref: restaurantNotificationTopic
+    - Effect: Allow
       Action: kinesis:PutRecord
       Resource:
         Fn::GetAtt:
@@ -77,16 +81,35 @@ functions:
           path: /orders
           method: post
           authorizer:
-            arn: arn:aws:cognito-idp:#{AWS::Region}:#{AWS::AccountId}:userpool/${ssm:/workshop-jacob/dev/cognito_user_pool_id}
+            arn: arn:aws:cognito-idp:#{AWS::Region}:#{AWS::AccountId}:userpool/${ssm:/${self:service}/${opt:stage}/cognito_user_pool_id}
     environment:
-      order_events_stream: ${ssm:/workshop-jacob/dev/stream_name}
+      order_events_stream: ${ssm:/${self:service}/${opt:stage}/stream_name}
+
+  notify-restaurant:
+    handler: functions/notify-restaurant.handler
+    events:
+      - stream:
+          type: kinesis
+          arn:
+            Fn::GetAtt:
+              - orderEventsStream
+              - Arn
+    environment:
+      order_events_stream: ${ssm:/${self:service}/${opt:stage}/stream_name}
+      restaurant_notification_topic:
+        Ref: restaurantNotificationTopic
 
 resources:
   Resources:
+    restaurantNotificationTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: ${ssm:/${self:service}/${opt:stage}/restaurant_topic_name}
+        TopicName: ${ssm:/${self:service}/${opt:stage}/restaurant_topic_name}
     orderEventsStream:
       Type: AWS::Kinesis::Stream
       Properties:
-        Name: ${ssm:/workshop-jacob/dev/stream_name}
+        Name: ${ssm:/${self:service}/${opt:stage}/stream_name}
         ShardCount: 1
     restaurantsTable:
       Type: AWS::DynamoDB::Table
