@@ -39,7 +39,7 @@ functions:
           - ""
           - - "https://"
             - Ref: ApiGatewayRestApi
-            - ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}/restaurants"
+            - ".execute-api.${opt:region}.amazonaws.com/${opt:stage}/restaurants"
       cognito_user_pool_id: ${ssm:/${self:service}/${opt:stage}/cognito_user_pool_id}
       cognito_client_id: ${ssm:/${self:service}/${opt:stage}/cognito_web_client_id}
 

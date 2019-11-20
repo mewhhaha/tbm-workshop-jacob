@@ -29,17 +29,6 @@ const init = async () => {
     return;
   }
 
-  const params = await getParameters([
-    "stream_name",
-    "table_name",
-    "cognito_user_pool_id",
-    "cognito_web_client_id",
-    "cognito_server_client_id",
-    "url"
-  ]);
-
-  console.log("SSM params loaded");
-
   process.env.TEST_ROOT = params.url;
   process.env.restaurants_api = `${params.url}/restaurants`;
   process.env.restaurants_table = params.table_name;
@@ -59,6 +48,17 @@ const init = async () => {
   }
 
   console.log("AWS credential loaded");
+
+  const params = await getParameters([
+    "stream_name",
+    "table_name",
+    "cognito_user_pool_id",
+    "cognito_web_client_id",
+    "cognito_server_client_id",
+    "url"
+  ]);
+
+  console.log("SSM params loaded");
 
   initialized = true;
 };
