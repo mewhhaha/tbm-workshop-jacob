@@ -7,8 +7,8 @@
   "license": "ISC",
   "scripts": {
     "sls": "serverless",
-    "test": "TEST_MODE=handler ./node_modules/.bin/mocha tests/test_cases --reporter spec",
-    "acceptance": "TEST_MODE=http ./node_modules/.bin/mocha tests/test_cases --reporter spec"
+    "test": "TEST_MODE=handler ./node_modules/.bin/mocha tests/test_cases --reporter spec --timeout 10000",
+    "acceptance": "TEST_MODE=http ./node_modules/.bin/mocha tests/test_cases --reporter spec --timeout 10000"
   },
   "devDependencies": {
     "chai": "^4.2.0",

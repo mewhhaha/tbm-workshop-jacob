@@ -9,7 +9,17 @@ provider:
   name: aws
   runtime: nodejs10.x
   region: us-east-1
-  stage: dev
+  stage: dev'
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "xray:PutTraceSegments"
+        - "xray:PutTelemetryRecords"
+      Resource:
+        - "*"
+  tracing:
+    apiGateway: true
+    lambda: true
   environment:
     LOG_LEVEL: ${self:custom.logLevel.${self:custom.stage}, self:custom.logLevel.default}
 
@@ -183,6 +193,8 @@ resources:
           WriteCapacityUnits: 1
 
 custom:
+  serverless-iam-roles-per-function:
+    defaultInherit: true
   stage: ${opt:stage, self:provider.stage}
   logLevel:
     prod: INFO
