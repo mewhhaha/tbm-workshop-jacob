@@ -12,7 +12,7 @@ describe("Given an authenticated user", () => {
     user = await given.an_authenticated_user();
   });
 
-  after(() => await tearDown.an_authenticated_user(user));
+  after(() => (await tearDown.an_authenticated_user(user)));
 
   describe(`When we invoke the POST /restaurants/search endpoint with theme 'cartoon'`, () => {
     before(async () => await init());
