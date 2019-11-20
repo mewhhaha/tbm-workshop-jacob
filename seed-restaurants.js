@@ -52,7 +52,7 @@ let restaurants = [
 const getTableName = async () => {
   console.log("getting table name...");
   const req = {
-    Name: `/{replace this with what you used in SSM}/${STAGE}/table_name`
+    Name: `/workshop-jacob/${STAGE}/table_name`
   };
   const ssmResp = await ssm.getParameter(req).promise();
   return ssmResp.Parameter.Value;
