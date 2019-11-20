@@ -1,4 +1,5 @@
-const AWS = require("aws-sdk");
+const AWSXRay = require("aws-xray-sdk-core");
+const AWS = AWSXRay.captureAWS(require("aws-sdk"));
 const wrap = require("@dazn/lambda-powertools-pattern-basic");
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
