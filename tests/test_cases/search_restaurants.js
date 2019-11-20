@@ -4,21 +4,21 @@ const when = require("../steps/when");
 const tearDown = require("../steps/tearDown");
 const given = require("../steps/given");
 
-// describe(`When we invoke the POST /restaurants/search endpoint with theme 'cartoon'`, () => {
-//   before(async () => await init());
+describe(`When we invoke the POST /restaurants/search endpoint with theme 'cartoon'`, () => {
+  before(async () => await init());
 
-//   it(`Should return an array of 4 restaurants`, async () => {
-//     let res = await when.we_invoke_search_restaurants("cartoon");
+  it(`Should return an array of 4 restaurants`, async () => {
+    let res = await when.we_invoke_search_restaurants("cartoon");
 
-//     expect(res.statusCode).to.equal(200);
-//     expect(res.body).to.have.lengthOf(4);
+    expect(res.statusCode).to.equal(200);
+    expect(res.body).to.have.lengthOf(4);
 
-//     for (let restaurant of res.body) {
-//       expect(restaurant).to.have.property("name");
-//       expect(restaurant).to.have.property("image");
-//     }
-//   });
-// });
+    for (let restaurant of res.body) {
+      expect(restaurant).to.have.property("name");
+      expect(restaurant).to.have.property("image");
+    }
+  });
+});
 
 describe("Given an authenticated user", () => {
   let user;
