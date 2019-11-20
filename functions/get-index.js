@@ -3,6 +3,7 @@ const Mustache = require("mustache");
 const http = require("superagent-promise")(require("superagent"), Promise);
 const aws4 = require("aws4");
 const URL = require("url");
+const Log = require("@dazn/lambda-powertools-logger");
 
 const restaurantsApiRoot = process.env.restaurants_api;
 const days = [
@@ -24,9 +25,9 @@ let html;
 
 function loadHtml() {
   if (!html) {
-    console.log("loading index.html...");
+    Log.info("loading index.html...");
     html = fs.readFileSync("static/index.html", "utf-8");
-    console.log("loaded");
+    Log.info("loaded");
   }
 
   return html;

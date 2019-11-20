@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const AWS = require("aws-sdk");
 const kinesis = new AWS.Kinesis();
+const Log = require("@dazn/lambda-powertools-logger");
 const chance = require("chance").Chance();
 const streamName = process.env.order_events_stream;
 
@@ -19,7 +20,7 @@ module.exports.handler = async (event, context) => {
   }
 
   const orderId = chance.guid();
-  console.log(
+  Log.debug(
     `placing order ID [${orderId}] to [${restaurantName}] for user [${userEmail}]`
   );
 
@@ -38,7 +39,7 @@ module.exports.handler = async (event, context) => {
 
   await kinesis.putRecord(req).promise();
 
-  console.log(`published 'order_placed' event into Kinesis`);
+  Log.debug(`published 'order_placed' event into Kinesis`);
 
   const response = {
     statusCode: 200,

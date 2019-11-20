@@ -10,6 +10,8 @@ provider:
   runtime: nodejs10.x
   region: us-east-1
   stage: dev
+  environment:
+    LOG_LEVEL: ${self:custom.logLevel.${self:custom.stage}, self:custom.logLevel.default}
 
 functions:
   retry-notify-restaurant:
@@ -179,3 +181,9 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  logLevel:
+    prod: INFO
+    default: DEBUG
