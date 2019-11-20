@@ -34,6 +34,12 @@ functions:
           path: /
           method: get
     environment:
+      orders_api:
+        Fn::Join:
+          - ""
+          - - "https://"
+            - Ref: ApiGatewayRestApi
+            - ".execute-api.${opt:region}.amazonaws.com/${opt:stage}/orders"
       restaurants_api:
         Fn::Join:
           - ""

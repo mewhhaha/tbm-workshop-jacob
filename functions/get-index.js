@@ -14,6 +14,7 @@ const days = [
   "Friday",
   "Saturday"
 ];
+const ordersApiRoot = process.env.orders_api;
 
 const awsRegion = process.env.AWS_REGION;
 const cognitoUserPoolId = process.env.cognito_user_pool_id;
@@ -63,7 +64,8 @@ module.exports.handler = async (event, context) => {
     cognitoClientId,
     dayOfWeek,
     restaurants,
-    searchUrl: `${restaurantsApiRoot}/search`
+    searchUrl: `${restaurantsApiRoot}/search`,
+    placeOrderUrl: `${ordersApiRoot}`
   };
   const html = Mustache.render(template, view);
   const response = {

@@ -9,5 +9,3 @@ phases:
   build:
     commands:
       - npm run $COMMAND
-      # - npm run sls -- deploy -s $STAGE -r $REGION
-      # - npm run acceptance
