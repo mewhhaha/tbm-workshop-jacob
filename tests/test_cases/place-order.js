@@ -47,10 +47,6 @@ if (process.env.TEST_MODE !== "handler") {
           expect(isEventPublished).to.be.true;
         });
       }
-
-      it(`Should publish a message to Kinesis stream`, async () => {
-        expect(isEventPublished).to.be.true;
-      });
     });
   });
 }
