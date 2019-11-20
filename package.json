@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@dazn/lambda-powertools-logger": "^1.15.2",
+    "@dazn/lambda-powertools-pattern-basic": "^1.15.2",
     "arrify": "^2.0.1",
     "aws-sdk": "^2.574.0",
     "aws4": "^1.8.0",

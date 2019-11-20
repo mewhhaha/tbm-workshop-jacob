@@ -4,13 +4,14 @@ const kinesis = new AWS.Kinesis();
 const Log = require("@dazn/lambda-powertools-logger");
 const chance = require("chance").Chance();
 const streamName = process.env.order_events_stream;
+const wrap = require("@dazn/lambda-powertools-pattern-basic");
 
 const UNAUTHORIZED = {
   statusCode: 401,
   body: "unauthorized"
 };
 
-module.exports.handler = async (event, context) => {
+module.exports.handler = wrap(async (event, context) => {
   const restaurantName = JSON.parse(event.body).restaurantName;
 
   const userEmail = _.get(event, "requestContext.authorizer.claims.email");
@@ -47,4 +48,4 @@ module.exports.handler = async (event, context) => {
   };
 
   return response;
-};
+});
