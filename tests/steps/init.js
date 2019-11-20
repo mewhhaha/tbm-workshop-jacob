@@ -29,15 +29,6 @@ const init = async () => {
     return;
   }
 
-  process.env.TEST_ROOT = params.url;
-  process.env.restaurants_api = `${params.url}/restaurants`;
-  process.env.restaurants_table = params.table_name;
-  process.env.AWS_REGION = REGION;
-  process.env.cognito_user_pool_id = params.cognito_user_pool_id;
-  process.env.cognito_client_id = params.cognito_web_client_id;
-  process.env.cognito_server_client_id = params.cognito_server_client_id;
-  process.env.order_events_stream = params.stream_name;
-
   const { credentials } = await promisify(awscred.load)();
 
   process.env.AWS_ACCESS_KEY_ID = credentials.accessKeyId;
@@ -59,6 +50,15 @@ const init = async () => {
   ]);
 
   console.log("SSM params loaded");
+
+  process.env.TEST_ROOT = params.url;
+  process.env.restaurants_api = `${params.url}/restaurants`;
+  process.env.restaurants_table = params.table_name;
+  process.env.AWS_REGION = REGION;
+  process.env.cognito_user_pool_id = params.cognito_user_pool_id;
+  process.env.cognito_client_id = params.cognito_web_client_id;
+  process.env.cognito_server_client_id = params.cognito_server_client_id;
+  process.env.order_events_stream = params.stream_name;
 
   initialized = true;
 };
